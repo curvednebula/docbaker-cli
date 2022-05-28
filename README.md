@@ -2,9 +2,11 @@
 
 DokBaker is OpenAPI to PDF document generator.
 
-**[Homepage](https://curvednebula.com/docbaker/)**
+**[Homepage.](https://curvednebula.com/docbaker/)**
 
 # Compile to platform native binary
+
+**[Dart SDK](https://dart.dev/)** is required.
 
 ## macOS
 dart compile exe cli/main.dart -o bin/docbaker
@@ -12,8 +14,18 @@ dart compile exe cli/main.dart -o bin/docbaker
 ## Windows
 dart compile exe cli/main.dart -o bin/docbaker.exe
 
-## Run
-dart cli/main.dart openapi.json --title "My REST API Spec" --subtitle "v1.0.0"
+# Usage
+'''
+Usage: docbaker <openapi.json> [<api2.json> <api3.json> ...] [<options>]
+Options:
+-o, --output                Output file.
+                            (defaults to "api-spec.pdf")
+    --title                 Document title.
+                            (defaults to "API Spec")
+    --subtitle              Document sub title.
+    --[no-]merge-schemas    When multiple API files parsed merge all schemas into one section.
+-h, --help                  Show this help page.
+'''
 
 # MIT License
 
