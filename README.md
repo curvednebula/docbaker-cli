@@ -6,16 +6,16 @@ DokBaker is OpenAPI to PDF document generator.
 
 # Compile to platform native binary
 
-**[Dart SDK](https://dart.dev/)** is required.
+[Dart SDK](https://dart.dev/) is required to build and run DocBaker.
 
-## macOS
+**macOS:**
 dart compile exe cli/main.dart -o bin/docbaker
 
-## Windows
+**Windows:**
 dart compile exe cli/main.dart -o bin/docbaker.exe
 
 # Usage
-'''
+```
 Usage: docbaker <openapi.json> [<api2.json> <api3.json> ...] [<options>]
 Options:
 -o, --output                Output file.
@@ -25,7 +25,7 @@ Options:
     --subtitle              Document sub title.
     --[no-]merge-schemas    When multiple API files parsed merge all schemas into one section.
 -h, --help                  Show this help page.
-'''
+```
 
 # MIT License
 
