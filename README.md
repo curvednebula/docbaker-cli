@@ -9,10 +9,14 @@ DokBaker is OpenAPI to PDF document generator.
 [Dart SDK](https://dart.dev/) is required to build and run DocBaker.
 
 **macOS:**
+```
 dart compile exe cli/main.dart -o bin/docbaker
+```
 
 **Windows:**
+```
 dart compile exe cli/main.dart -o bin/docbaker.exe
+```
 
 # Usage
 ```
