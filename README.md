@@ -1,6 +1,6 @@
 #  DocBaker for OpenAPI
 
-DokBaker is OpenAPI to PDF document generator.
+DocBaker is OpenAPI to PDF document generator.
 
 **[Homepage.](https://curvednebula.com/docbaker/)**
 
