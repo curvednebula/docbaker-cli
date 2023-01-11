@@ -141,8 +141,9 @@ class OpenApiParser {
 
   void _writeBody(_Json bodySpec) {
 
-    if (bodySpec['description'] != null && bodySpec['description'] != '') {
-      doc.addComment(bodySpec['description']);
+    String? descr = bodySpec['description']?.toString();
+    if (descr != null && descr != '') {
+      doc.addComment(descr);
     }
 
     _Json? contentSpec = bodySpec['content'];
@@ -156,11 +157,7 @@ class OpenApiParser {
         if (schemaRef != null) {
           final schema = _parseSchemaRef(schemaRef);
           _Json? schemaSpec = _spec['components']?['schemas']?[schema.schemaName];
-          if (schemaSpec != null) {
-            _writeSchema(schemaSpec, name: schema.text);
-          } else {
-            doc.addPara('Schema: ${schema.text} (no definition).');
-          }
+          _writeSchema(schemaSpec, name: schema.text);
           emptyBody = false;
         }
       }
@@ -189,9 +186,13 @@ class OpenApiParser {
     }
   }
 
-  void _writeSchema(_Json schemaSpec, {String? name}) {
+  void _writeSchema(_Json? schemaSpec, {String? name}) {
 
-    doc.addSchemaType(name ?? schemaSpec['type']);
+    doc.addSchemaType(name ?? schemaSpec?['type']);
+
+    if (schemaSpec == null) {
+      return;
+    }
 
     if (schemaSpec['properties'] != null) {
       doc.addPara('{');
