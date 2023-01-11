@@ -126,7 +126,7 @@ class OpenApiParser {
 
     if (methodSpec['requestBody'] != null) {
       doc.addSubHeader('Request Body:');
-      _writeBodyContent(methodSpec['requestBody']['content']);
+      _writeBody(methodSpec['requestBody']);
     }
 
     _Json? responses = methodSpec['responses'];
@@ -134,16 +134,18 @@ class OpenApiParser {
     if (responses != null) {
       for (final resp in responses.entries) {
         doc.addSubHeader('Response ${resp.key}:');
-        _Json respSpec = resp.value;
-        if (respSpec['description'] != null && respSpec['description'] != '') {
-          doc.addComment(respSpec['description']);
-        }
-        _writeBodyContent(respSpec['content']);
+        _writeBody(resp.value);
       }
     }
   }
 
-  void _writeBodyContent(_Json? contentSpec) {
+  void _writeBody(_Json bodySpec) {
+
+    if (bodySpec['description'] != null && bodySpec['description'] != '') {
+      doc.addComment(bodySpec['description']);
+    }
+
+    _Json? contentSpec = bodySpec['content'];
     bool emptyBody = true;
 
     if (contentSpec != null) {
@@ -152,23 +154,19 @@ class OpenApiParser {
       if (content != null) {
         _Json? schemaRef = content.spec['schema'];
         if (schemaRef != null) {
-          final parsedSchema = _parseSchemaRef(schemaRef);
-          _writeBodySchema(parsedSchema);
+          final schema = _parseSchemaRef(schemaRef);
+          _Json? schemaSpec = _spec['components']?['schemas']?[schema.schemaName];
+          if (schemaSpec != null) {
+            _writeSchema(schemaSpec, name: schema.text);
+          } else {
+            doc.addPara('Schema: ${schema.text} (no definition).');
+          }
           emptyBody = false;
         }
       }
     }
     if (emptyBody) {
       doc.addPara('Empty body.');
-    }
-  }
-
-  void _writeBodySchema(_SchemaRef schema) {
-    _Json? schemaSpec = _spec['components']?['schemas']?[schema.schemaName];
-    if (schemaSpec != null) {
-      _writeSchema(schemaSpec, name: schema.text);
-    } else {
-      doc.addPara('Schema: ${schema.text} (no definition).');
     }
   }
 
@@ -193,7 +191,7 @@ class OpenApiParser {
 
   void _writeSchema(_Json schemaSpec, {String? name}) {
 
-    doc.addSchemaType(schemaSpec['type'], name);
+    doc.addSchemaType(name ?? schemaSpec['type']);
 
     if (schemaSpec['properties'] != null) {
       doc.addPara('{');
