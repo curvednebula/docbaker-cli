@@ -57,7 +57,8 @@ void main(List<String> arguments) async {
     } on OpenApiException catch (e) {
       print(e.toString());
     } catch (e) {
-      print('OpenAPI JSON parsing error.');
+      print('OpenAPI JSON parsing error: $e');
+      rethrow;
     }
   }
 

@@ -213,7 +213,9 @@ class OpenApiParser {
     }
     else if (schemaSpec['enum'] != null) {
       doc.addPara('Values:');
-      List<String> values = (schemaSpec['enum'] as List<dynamic>).map((v) => v as String).toList();
+      List<String> values = (schemaSpec['enum'] as List<dynamic>)
+        .map((v) => v.toString())
+        .toList();
       doc.addEnumValues(values);
     }
   }
