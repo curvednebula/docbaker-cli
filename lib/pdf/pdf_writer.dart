@@ -108,9 +108,10 @@ class PdfWriter {
   }
 
   void addSchemaType(String type, String? schemaName) {
+    // TODO: type isn't used - remove?
     _addParaSpans([
-      Span('Type: $type'),
-      schemaName != null ? Span(' ($schemaName)', style: pw.TextStyle(color: _varTypeColor)) : Span('')
+      Span('Type:'),
+      schemaName != null ? Span(' $schemaName', style: pw.TextStyle(color: _varTypeColor)) : Span('')
     ]);
   }
 

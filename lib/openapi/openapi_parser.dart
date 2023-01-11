@@ -13,12 +13,18 @@ class _JsonLeaf {
 class _SchemaRef {
   String text;
   String schemaName;
+  bool isArray = false;
   String? anchor;
 
-  _SchemaRef(this.text, this.schemaName, {this.anchor});
+  _SchemaRef(this.text, this.schemaName, {this.anchor, this.isArray = false});
   _SchemaRef.undefined() : text = 'undefined', schemaName = 'undefined';
 
   bool get isUndefined => text == 'undefined';
+
+  @override
+  String toString() {
+    return '{ text: "$text", schemaName: "$schemaName", anchor: "$anchor" }';
+  }
 }
 
 class OpenApiParser {
@@ -146,13 +152,23 @@ class OpenApiParser {
       if (content != null) {
         _Json? schemaRef = content.spec['schema'];
         if (schemaRef != null) {
-          _writeSchemaByName(_parseSchemaRef(schemaRef).schemaName);
+          final parsedSchema = _parseSchemaRef(schemaRef);
+          _writeBodySchema(parsedSchema);
           emptyBody = false;
         }
       }
     }
     if (emptyBody) {
       doc.addPara('Empty body.');
+    }
+  }
+
+  void _writeBodySchema(_SchemaRef schema) {
+    _Json? schemaSpec = _spec['components']?['schemas']?[schema.schemaName];
+    if (schemaSpec != null) {
+      _writeSchema(schemaSpec, name: schema.text);
+    } else {
+      doc.addPara('Schema: ${schema.text} (no definition).');
     }
   }
 
@@ -166,7 +182,6 @@ class OpenApiParser {
     }
   }
   
-
   void _writeSchemas(_Json schemas) {
     print('Schemas:');
     for (final schema in schemas.entries) {
@@ -205,15 +220,6 @@ class OpenApiParser {
     }
   }
 
-  void _writeSchemaByName(String? name) {
-    _Json? schemaSpec = _spec['components']?['schemas']?[name];
-    if (schemaSpec != null) {
-      _writeSchema(schemaSpec, name: name);
-    } else {
-      doc.addPara('Schema: $name (no definition).');
-    }
-  }
-
   String _schemaNameByRef(String ref) {
     String refPath = '#/components/schemas/';
     int start = ref.indexOf(refPath);
@@ -235,7 +241,7 @@ class OpenApiParser {
     if (schemaRef['type'] != null) {
       if (schemaRef['type'] == 'array' && schemaRef['items'] != null) {
         final typeRef = _parseSchemaRef(schemaRef['items']);
-        return _SchemaRef('Array<${typeRef.text}>', typeRef.schemaName, anchor: typeRef.anchor);
+        return _SchemaRef('Array<${typeRef.text}>', typeRef.schemaName, anchor: typeRef.anchor, isArray: true);
       } else {
         return _SchemaRef(schemaRef['type'], schemaRef['type']);
       }

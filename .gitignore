@@ -8,5 +8,5 @@ build/
 # Generated output.
 *.pdf
 
-# Test filess
+# Test files
 test/
