@@ -2,6 +2,8 @@
 
 DocBaker is OpenAPI to PDF document generator.
 
+This project is continued as Node.js cli tool **[apibake](https://www.npmjs.com/package/apibake)**.
+
 **[Homepage.](https://curvednebula.com/docbaker/)**
 
 # Compile to platform native binary
